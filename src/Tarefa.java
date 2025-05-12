@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class Tarefa {
     private String descricao;
-    private LocalDateTime dataCriacao;
+    private final LocalDateTime dataCriacao;
     private LocalDateTime dataConclusao;
     private String usuario;
     private Status status;

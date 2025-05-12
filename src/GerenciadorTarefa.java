@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GerenciadorTarefa {
-    private List<Tarefa> tarefas = new ArrayList<>();
+    private final List<Tarefa> tarefas = new ArrayList<>();
 
     public void adicionarTarefa(Tarefa tarefa) {
         tarefas.add(tarefa);

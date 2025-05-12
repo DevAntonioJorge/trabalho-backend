@@ -1,7 +1,11 @@
+
+import java.time.LocalDateTime;
+
+
 public class Tarefa {
     private String descricao;
-    private int dataCriacao;
-    private int dataConclusao;
+    private LocalDateTime dataCriacao;
+    private LocalDateTime dataConclusao;
     private String usuario;
     private Status status;
 
@@ -11,10 +15,9 @@ public class Tarefa {
         PENDENTE
     }
 
-    public Tarefa(String descricao, int dataCriacao, int dataConclusao, String usuario, Status status) {
+    public Tarefa(String descricao, String usuario, Status status) {
         this.descricao = descricao;
-        this.dataCriacao = dataCriacao;
-        this.dataConclusao = dataConclusao;
+        this.dataCriacao = LocalDateTime.now();
         this.usuario = usuario;
         this.status = status;
     }
@@ -27,20 +30,16 @@ public class Tarefa {
         this.descricao = descricao;
     }
 
-    public int getDataCriacao() {
+    public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(int dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public int getDataConclusao() {
+    public LocalDateTime getDataConclusao() {
         return dataConclusao;
     }
 
-    public void setDataConclusao(int dataConclusao) {
-        this.dataConclusao = dataConclusao;
+    public void setDataConclusao() {
+        this.dataConclusao = LocalDateTime.now();
     }
 
     public String getUsuario() {

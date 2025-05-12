@@ -2,7 +2,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GerenciadorUsuario {
-    private Map<String, Usuario> usuarios = new HashMap<>();
+    private final Map<String, Usuario> usuarios = new HashMap<>();
 
     public void adicionarUsuario(String nome, String senha) {
         if (!usuarios.containsKey(nome)) {

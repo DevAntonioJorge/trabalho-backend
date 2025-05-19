@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 
 
 public class Tarefa {
+    private int id;
     private String descricao;
     private final LocalDateTime dataCriacao;
     private LocalDateTime dataConclusao;
@@ -57,5 +58,7 @@ public class Tarefa {
     public void setStatus(Status status) {
         this.status = status;
     }
+    public int getId() {return id;}
+    public void setId(int id) {this.id = id;}
 }
 

@@ -1,4 +1,5 @@
 public class Tarefa {
+    private int id;
     private String descricao;
     private int dataCriacao;
     private int dataConclusao;
@@ -58,5 +59,6 @@ public class Tarefa {
     public void setStatus(Status status) {
         this.status = status;
     }
+    public int getId() {return id;}
 }
 

@@ -72,7 +72,7 @@ public class GerenciadorTarefa {
                     Tarefa.Status status = Tarefa.Status.valueOf(partes[3]);
                     String usuario = partes[4];
                     
-                    Tarefa tarefa = new Tarefa(descricao, 0, 0, usuario, status);
+                    Tarefa tarefa = new Tarefa(descricao, usuario, status);
                     tarefa.setId(id);
                     tarefas.add(tarefa);
                     

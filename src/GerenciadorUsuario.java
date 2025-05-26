@@ -8,7 +8,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 public class GerenciadorUsuario {
-    private Map<String, Usuario> usuarios = new HashMap<>();
+    private final Map<Integer, Usuario> usuarios = new HashMap<>();
     private final String ARQUIVO_USUARIOS = "usuarios.csv";
     private int proximoId = 1;
 
@@ -16,35 +16,34 @@ public class GerenciadorUsuario {
         carregarUsuarios();
     }  
     public boolean adicionarUsuario(String nome, String senha) {
-        if (!usuarios.containsKey(nome)) {
-            Usuario usuario = new Usuario(nome, senha);
-            usuarios.put(nome, usuario);
-            salvarUsuarios();
-            return true;
+        if (buscarUsuarioPorNome(nome) != null) {
+            return false;
         }
-        usuarios.put(nome, senha);
+        Usuario usuario = new Usuario(proximoId++, nome, senha);
+        usuarios.put(usuario.getId(), usuario);
+        salvarUsuarios();
         return true;
-        
     }
 
     public boolean login(String nome, String senha) {
-        return usuarios.containsKey(nome) && usuarios.get(nome).equals(senha);
+        Usuario usuario = buscarUsuarioPorNome(nome);
+        return usuario != null && usuario.getSenha().equals(senha);
     }
 
     public Usuario buscarUsuarioPorId(int id) {
+        return usuarios.get(id);
+    }
+
+    public Usuario buscarUsuarioPorNome(String nome) {
         for (Usuario usuario : usuarios.values()) {
-            if (usuario.getId() == id) {
+            if (usuario.getNome().equals(nome)) {
                 return usuario;
             }
         }
         return null;
     }
 
-    public Usuario buscarUsuarioPorNome(String nome) {
-        return usuarios.get(nome);
-    }
-
-    public Map<String, Usuario> listarUsuarios() {
+    public Map<Integer, Usuario> listarUsuarios() {
         return usuarios;
     }
 
@@ -85,7 +84,7 @@ public class GerenciadorUsuario {
                     String senha = partes[2].replace("\"", ""); 
                     
                     Usuario usuario = new Usuario(id, nome, senha);
-                    usuarios.put(nome, usuario);
+                    usuarios.put(id, usuario);
                     
                     if (id > maiorId) {
                         maiorId = id;

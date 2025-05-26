@@ -97,6 +97,7 @@ public class Main {
                     Tarefa t = (Tarefa) value;
                     String dataCriacao = sdf.format(new Date(t.getDataCriacao()));
                     String dataConclusao = t.getDataConclusao() != "" ? sdf.format(new Date(t.getDataConclusao())) : "-";
+
                     String texto = String.format("<html><b>%s</b> | Criada: %s | Conclusão: %s | Status: %s</html>",
                             t.getDescricao(), dataCriacao, dataConclusao, t.getStatus());
                     setText(texto);

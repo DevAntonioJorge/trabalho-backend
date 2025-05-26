@@ -71,6 +71,7 @@ public class GerenciadorUsuario {
         }
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
             String linha = reader.readLine();
+
             if (linha == null) {
                 return; 
             }

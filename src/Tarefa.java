@@ -1,7 +1,5 @@
 import java.time.LocalDateTime; 
 
-
-
 public class Tarefa {
     public enum Status {
     PENDENTE,
@@ -24,6 +22,7 @@ public class Tarefa {
         this.status = status;
     }
 
+    // Getters e Setters
     public String getDescricao() {
         return descricao;
     }

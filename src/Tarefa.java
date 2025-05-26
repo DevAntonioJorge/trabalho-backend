@@ -1,23 +1,25 @@
+import java.time.LocalDateTime; 
 
-import java.time.LocalDateTime;
 
 
 public class Tarefa {
+    public enum Status {
+    PENDENTE,
+    CONCLUIDA
+}
+
+
+    private int id;
     private String descricao;
-    private final LocalDateTime dataCriacao;
+    private LocalDateTime dataCriacao;
     private LocalDateTime dataConclusao;
     private String usuario;
     private Status status;
 
-    public enum Status {
-        EM_ANDAMENTO,
-        CONCLUIDA,
-        PENDENTE
-    }
-
     public Tarefa(String descricao, String usuario, Status status) {
         this.descricao = descricao;
         this.dataCriacao = LocalDateTime.now();
+        this.dataConclusao = null;
         this.usuario = usuario;
         this.status = status;
     }
@@ -30,12 +32,12 @@ public class Tarefa {
         this.descricao = descricao;
     }
 
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
+    public String getDataCriacao() {
+        return dataCriacao.toString();
     }
 
-    public LocalDateTime getDataConclusao() {
-        return dataConclusao;
+    public String getDataConclusao() {
+        return dataConclusao.toString();
     }
 
     public void setDataConclusao() {
@@ -57,5 +59,9 @@ public class Tarefa {
     public void setStatus(Status status) {
         this.status = status;
     }
-}
 
+    @Override
+    public String toString() {
+        return descricao;
+    }
+}

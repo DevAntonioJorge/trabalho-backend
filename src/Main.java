@@ -5,7 +5,6 @@ public class Main {
 
         Scanner myScanner = new Scanner(System.in);
         GerenciadorUsuario usuarios = new GerenciadorUsuario();
-        GerenciadorTarefa tarefas = new GerenciadorTarefa();
         String logado = null;
 
         while (true) {
@@ -16,34 +15,33 @@ public class Main {
 
             int op = myScanner.nextInt();
             myScanner.nextLine();
-            switch (op) {
-                case 1 -> {
-                    System.out.print("Usuário: ");
-                    String nome = myScanner.nextLine();
-                    System.out.print("Senha: ");
-                    String senha = myScanner.nextLine();
-                    usuarios.adicionarUsuario(nome, senha);
-                    System.out.println("Cadastrado");
+
+            if (op == 1) {
+                System.out.print("Usuário: ");
+                String nome = myScanner.nextLine();
+                System.out.print("Senha: ");
+                String senha = myScanner.nextLine();
+                usuarios.adicionarUsuario(nome, senha);
+                System.out.println("Cadastrado");
+            } else if (op == 2) {
+                System.out.print("Usuário: ");
+                String nome = myScanner.nextLine();
+                System.out.print("Senha: ");
+                String senha = myScanner.nextLine();
+                if (usuarios.login(nome, senha)) {
+                    logado = nome;
+                    System.out.println("Logado");
+                } else {
+                    System.out.println("Login incorreto.");
                 }
-                case 2 -> {
-                    System.out.print("Usuário: ");
-                    String nome = myScanner.nextLine();
-                    System.out.print("Senha: ");
-                    String senha = myScanner.nextLine();
-                    if (usuarios.login(nome, senha)) {
-                        logado = nome;
-                        System.out.println("Logado");
-                    } else {
-                        System.out.println("Login incorreto.");
-                    }
-                }
-                case 3 -> {
-                    System.out.println("Finalizando");
-                    myScanner.close();
-                    return;
-                }
-                default -> throw new AssertionError();
+            } else if (op == 3) {
+                System.out.println("Finalizando");
+                break;
+            } else {
+                System.out.println("Opção inválida.");
             }
         }
+
+        myScanner.close();
     }
 }

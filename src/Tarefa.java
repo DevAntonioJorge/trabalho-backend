@@ -1,11 +1,9 @@
-
-import java.time.LocalDateTime;
-
+import java.time.LocalDateTime; 
 
 public class Tarefa {
     private int id;
     private String descricao;
-    private final LocalDateTime dataCriacao;
+    private LocalDateTime dataCriacao;
     private LocalDateTime dataConclusao;
     private String usuario;
     private Status status;
@@ -19,6 +17,7 @@ public class Tarefa {
     public Tarefa(String descricao, String usuario, Status status) {
         this.descricao = descricao;
         this.dataCriacao = LocalDateTime.now();
+        this.dataConclusao = null;
         this.usuario = usuario;
         this.status = status;
     }

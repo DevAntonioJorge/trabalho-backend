@@ -1,19 +1,24 @@
-public class Tarefa {
-    public enum Status {
+import java.time.LocalDateTime; 
+
+public enum Status {
         PENDENTE,
         CONCLUIDA
     }
 
+public class Tarefa {
+    
+
+    private int id;
     private String descricao;
-    private long dataCriacao;
-    private long dataConclusao;
+    private LocalDateTime dataCriacao;
+    private LocalDateTime dataConclusao;
     private String usuario;
     private Status status;
 
-    public Tarefa(String descricao, long dataCriacao, long dataConclusao, String usuario, Status status) {
+    public Tarefa(String descricao, String usuario, Status status) {
         this.descricao = descricao;
-        this.dataCriacao = dataCriacao;
-        this.dataConclusao = dataConclusao;
+        this.dataCriacao = LocalDateTime.now();
+        this.dataConclusao = null;
         this.usuario = usuario;
         this.status = status;
     }
@@ -27,20 +32,16 @@ public class Tarefa {
         this.descricao = descricao;
     }
 
-    public long getDataCriacao() {
+    public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(long dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public long getDataConclusao() {
+    public LocalDateTime getDataConclusao() {
         return dataConclusao;
     }
 
-    public void setDataConclusao(long dataConclusao) {
-        this.dataConclusao = dataConclusao;
+    public void setDataConclusao() {
+        this.dataConclusao = LocalDateTime.now();
     }
 
     public String getUsuario() {

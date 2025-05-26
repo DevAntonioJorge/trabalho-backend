@@ -21,11 +21,13 @@ public class GerenciadorUsuario {
             usuarios.put(nome, usuario);
             salvarUsuarios();
         }
+        // Adiciona usuário novo
+        usuarios.put(nome, senha);
+        return true;
     }
 
     public boolean login(String nome, String senha) {
-        Usuario usuario = usuarios.get(nome);
-        return usuario != null && usuario.getSenha().equals(senha);
+        return usuarios.containsKey(nome) && usuarios.get(nome).equals(senha);
     }
 
     public Usuario buscarUsuarioPorId(int id) {

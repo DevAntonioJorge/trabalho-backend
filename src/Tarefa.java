@@ -1,18 +1,19 @@
 import java.time.LocalDateTime; 
 
+public enum Status {
+        PENDENTE,
+        CONCLUIDA
+    }
+
 public class Tarefa {
+    
+
     private int id;
     private String descricao;
     private LocalDateTime dataCriacao;
     private LocalDateTime dataConclusao;
     private String usuario;
     private Status status;
-
-    public enum Status {
-        EM_ANDAMENTO,
-        CONCLUIDA,
-        PENDENTE
-    }
 
     public Tarefa(String descricao, String usuario, Status status) {
         this.descricao = descricao;
@@ -22,6 +23,7 @@ public class Tarefa {
         this.status = status;
     }
 
+    // Getters e Setters
     public String getDescricao() {
         return descricao;
     }
@@ -57,7 +59,9 @@ public class Tarefa {
     public void setStatus(Status status) {
         this.status = status;
     }
-    public int getId() {return id;}
-    public void setId(int id) {this.id = id;}
-}
 
+    @Override
+    public String toString() {
+        return descricao;
+    }
+}

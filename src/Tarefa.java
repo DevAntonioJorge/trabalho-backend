@@ -1,17 +1,16 @@
 public class Tarefa {
+    public enum Status {
+        PENDENTE,
+        CONCLUIDA
+    }
+
     private String descricao;
-    private int dataCriacao;
-    private int dataConclusao;
+    private long dataCriacao;
+    private long dataConclusao;
     private String usuario;
     private Status status;
 
-    public enum Status {
-        EM_ANDAMENTO,
-        CONCLUIDA,
-        PENDENTE
-    }
-
-    public Tarefa(String descricao, int dataCriacao, int dataConclusao, String usuario, Status status) {
+    public Tarefa(String descricao, long dataCriacao, long dataConclusao, String usuario, Status status) {
         this.descricao = descricao;
         this.dataCriacao = dataCriacao;
         this.dataConclusao = dataConclusao;
@@ -19,6 +18,7 @@ public class Tarefa {
         this.status = status;
     }
 
+    // Getters e Setters
     public String getDescricao() {
         return descricao;
     }
@@ -27,19 +27,19 @@ public class Tarefa {
         this.descricao = descricao;
     }
 
-    public int getDataCriacao() {
+    public long getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(int dataCriacao) {
+    public void setDataCriacao(long dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
 
-    public int getDataConclusao() {
+    public long getDataConclusao() {
         return dataConclusao;
     }
 
-    public void setDataConclusao(int dataConclusao) {
+    public void setDataConclusao(long dataConclusao) {
         this.dataConclusao = dataConclusao;
     }
 
@@ -58,5 +58,9 @@ public class Tarefa {
     public void setStatus(Status status) {
         this.status = status;
     }
-}
 
+    @Override
+    public String toString() {
+        return descricao;
+    }
+}

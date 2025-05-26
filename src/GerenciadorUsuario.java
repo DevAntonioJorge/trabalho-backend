@@ -2,16 +2,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GerenciadorUsuario {
-    private Map<String, Usuario> usuarios = new HashMap<>();
+    private Map<String, String> usuarios = new HashMap<>();
 
-    public void adicionarUsuario(String nome, String senha) {
-        if (!usuarios.containsKey(nome)) {
-            usuarios.put(nome, new Usuario(nome, senha));
+    public boolean adicionarUsuario(String nome, String senha) {
+        if (usuarios.containsKey(nome)) {
+            // Usuário já existe, não cadastra
+            return false;
         }
+        // Adiciona usuário novo
+        usuarios.put(nome, senha);
+        return true;
     }
 
     public boolean login(String nome, String senha) {
-        Usuario usuario = usuarios.get(nome);
-        return usuario != null && usuario.getSenha().equals(senha);
+        return usuarios.containsKey(nome) && usuarios.get(nome).equals(senha);
     }
 }

@@ -1,12 +1,11 @@
 import java.time.LocalDateTime; 
 
-public enum Status {
-        PENDENTE,
-        CONCLUIDA
-    }
-
 public class Tarefa {
-    
+    public enum Status {
+    PENDENTE,
+    CONCLUIDA
+}
+
 
     private int id;
     private String descricao;
@@ -32,12 +31,12 @@ public class Tarefa {
         this.descricao = descricao;
     }
 
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
+    public String getDataCriacao() {
+        return dataCriacao.toString();
     }
 
-    public LocalDateTime getDataConclusao() {
-        return dataConclusao;
+    public String getDataConclusao() {
+        return dataConclusao.toString();
     }
 
     public void setDataConclusao() {

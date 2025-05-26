@@ -15,15 +15,16 @@ public class GerenciadorUsuario {
     public GerenciadorUsuario() {
         carregarUsuarios();
     }  
-    public void adicionarUsuario(String nome, String senha) {
+    public boolean adicionarUsuario(String nome, String senha) {
         if (!usuarios.containsKey(nome)) {
-            Usuario usuario = new Usuario(proximoId++, nome, senha);
+            Usuario usuario = new Usuario(nome, senha);
             usuarios.put(nome, usuario);
             salvarUsuarios();
+            return true;
         }
-        // Adiciona usuário novo
         usuarios.put(nome, senha);
         return true;
+        
     }
 
     public boolean login(String nome, String senha) {
@@ -69,7 +70,8 @@ public class GerenciadorUsuario {
             return;
         }
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
-            String linha = reader.readLine(); // Pula cabeçalho CSV
+            String linha = reader.readLine();
+
             if (linha == null) {
                 return; 
             }

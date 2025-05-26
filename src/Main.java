@@ -96,7 +96,8 @@ public class Main {
                 if (value instanceof Tarefa) {
                     Tarefa t = (Tarefa) value;
                     String dataCriacao = sdf.format(new Date(t.getDataCriacao()));
-                    String dataConclusao = t.getDataConclusao() != 0 ? sdf.format(new Date(t.getDataConclusao())) : "-";
+                    String dataConclusao = t.getDataConclusao() != "" ? sdf.format(new Date(t.getDataConclusao())) : "-";
+
                     String texto = String.format("<html><b>%s</b> | Criada: %s | Conclusão: %s | Status: %s</html>",
                             t.getDescricao(), dataCriacao, dataConclusao, t.getStatus());
                     setText(texto);
@@ -129,7 +130,7 @@ public class Main {
             if (descricao == null || descricao.trim().isEmpty()) return;
 
             long agora = System.currentTimeMillis();
-            Tarefa novaTarefa = new Tarefa(descricao.trim(), agora, 0, usuarioLogado, Tarefa.Status.PENDENTE);
+            Tarefa novaTarefa = new Tarefa(descricao.trim(), usuarioLogado, Tarefa.Status.PENDENTE);
             gerenciadorTarefa.adicionarTarefa(novaTarefa);
             atualizarListaTarefas(modeloLista);
         });
@@ -145,7 +146,7 @@ public class Main {
                 return;
             }
             selecionada.setStatus(Tarefa.Status.CONCLUIDA);
-            selecionada.setDataConclusao(System.currentTimeMillis());
+            selecionada.setDataConclusao();
             atualizarListaTarefas(modeloLista);
         });
 

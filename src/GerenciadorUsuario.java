@@ -14,7 +14,8 @@ public class GerenciadorUsuario {
 
     public GerenciadorUsuario() {
         carregarUsuarios();
-    }    public void adicionarUsuario(String nome, String senha) {
+    }  
+    public void adicionarUsuario(String nome, String senha) {
         if (!usuarios.containsKey(nome)) {
             Usuario usuario = new Usuario(proximoId++, nome, senha);
             usuarios.put(nome, usuario);
@@ -88,7 +89,6 @@ public class GerenciadorUsuario {
                 }
             }
             
-            // Define o próximo ID como maior ID + 1
             proximoId = maiorId + 1;
             
         } catch (Exception e) {

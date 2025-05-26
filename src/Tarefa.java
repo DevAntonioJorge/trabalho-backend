@@ -1,6 +1,7 @@
 import java.time.LocalDateTime; 
 
 public class Tarefa {
+
     public enum Status {
     PENDENTE,
     CONCLUIDA
@@ -22,7 +23,6 @@ public class Tarefa {
         this.status = status;
     }
 
-    // Getters e Setters
     public String getDescricao() {
         return descricao;
     }
@@ -31,12 +31,12 @@ public class Tarefa {
         this.descricao = descricao;
     }
 
-    public String getDataCriacao() {
-        return dataCriacao.toString();
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
     }
 
-    public String getDataConclusao() {
-        return dataConclusao.toString();
+    public LocalDateTime getDataConclusao() {
+        return dataConclusao;  // Pode ser null
     }
 
     public void setDataConclusao() {
@@ -58,7 +58,9 @@ public class Tarefa {
     public void setStatus(Status status) {
         this.status = status;
     }
+    public void setId(int i) {this.id = i;}
 
+    public int getId() {return id;}
     @Override
     public String toString() {
         return descricao;

@@ -1,11 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 
 public class Main {
-    private static GerenciadorUsuario usuarios = new GerenciadorUsuario();
-    private static GerenciadorTarefa gerenciadorTarefa = new GerenciadorTarefa();
+    private static final GerenciadorUsuario usuarios = new GerenciadorUsuario();
+    private static final GerenciadorTarefa gerenciadorTarefa = new GerenciadorTarefa();
     private static String usuarioLogado = null;
 
     public static void main(String[] args) {
@@ -93,10 +93,11 @@ public class Main {
             public Component getListCellRendererComponent(JList<?> list, Object value, int index,
                                                           boolean isSelected, boolean cellHasFocus) {
                 Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Tarefa) {
-                    Tarefa t = (Tarefa) value;
-                    String dataCriacao = sdf.format(new Date(t.getDataCriacao()));
-                    String dataConclusao = t.getDataConclusao() != "" ? sdf.format(new Date(t.getDataConclusao())) : "-";
+                if (value instanceof Tarefa t) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    String dataCriacao = t.getDataCriacao().format(formatter);
+                    String dataConclusao = t.getDataConclusao() != null ? 
+                             t.getDataConclusao().format(formatter) : "-";
 
                     String texto = String.format("<html><b>%s</b> | Criada: %s | Conclusão: %s | Status: %s</html>",
                             t.getDescricao(), dataCriacao, dataConclusao, t.getStatus());
@@ -129,7 +130,6 @@ public class Main {
             String descricao = JOptionPane.showInputDialog(frame, "Descrição da tarefa:");
             if (descricao == null || descricao.trim().isEmpty()) return;
 
-            long agora = System.currentTimeMillis();
             Tarefa novaTarefa = new Tarefa(descricao.trim(), usuarioLogado, Tarefa.Status.PENDENTE);
             gerenciadorTarefa.adicionarTarefa(novaTarefa);
             atualizarListaTarefas(modeloLista);

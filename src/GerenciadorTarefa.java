@@ -8,7 +8,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 public class GerenciadorTarefa {
-    private List<Tarefa> tarefas = new ArrayList<>();
+    private final List<Tarefa> tarefas = new ArrayList<>();
     private final String ARQUIVO_TAREFAS = "tarefas.csv";
     private int proximoId = 1;
 
@@ -33,20 +33,11 @@ public class GerenciadorTarefa {
         return tarefas;
     }
 
-    public Tarefa buscarTarefaPorId(int id) {
-        for (Tarefa tarefa : tarefas) {
-            if (tarefa.getId() == id) {
-                return tarefa;
-            }
-        }
-        return null;
-    }
-
     private void criarArquivoTarefas() {
         File arquivo = new File(ARQUIVO_TAREFAS);
         if (!arquivo.exists()) {
             try {
-                arquivo.createNewFile();
+                arquivo.createNewFile()
             } catch (IOException e) {
                 System.out.println("Erro ao criar arquivo de tarefas: " + e.getMessage());
             }
@@ -58,7 +49,7 @@ public class GerenciadorTarefa {
             return;
         }
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
-            String linha = reader.readLine(); // Pula cabeçalho CSV
+            String linha = reader.readLine();
             if (linha == null) {
                 return; 
             }
@@ -89,15 +80,15 @@ public class GerenciadorTarefa {
         }
     }    public void salvarTarefas() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_TAREFAS))) {
-            writer.write("id,titulo,descricao,status,usuario");
+            writer.write("id,descricao,status,usuario");
             writer.newLine();
             
             for (Tarefa tarefa : tarefas) {
-                String linha = String.format("%d,\"%s\",\"%s\",%s,\"%s\"", 
-                    tarefa.getId(),
-                    tarefa.getDescricao(),
-                    tarefa.getStatus(),
-                    tarefa.getUsuario());
+                String linha = String.format("%d,\"%s\",%s,\"%s\"",
+                        tarefa.getId(),
+                        tarefa.getDescricao(),
+                        tarefa.getStatus(),
+                        tarefa.getUsuario());
                 writer.write(linha);
                 writer.newLine();
             }

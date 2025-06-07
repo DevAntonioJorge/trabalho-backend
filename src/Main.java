@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 
 public class Main {
@@ -84,28 +83,7 @@ public class Main {
         frame.setLayout(new BorderLayout());
 
         DefaultListModel<Tarefa> modeloLista = new DefaultListModel<>();
-        JList<Tarefa> listaTarefas = new JList<>(modeloLista);
-        listaTarefas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        listaTarefas.setCellRenderer(new DefaultListCellRenderer() {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index,
-                                                          boolean isSelected, boolean cellHasFocus) {
-                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Tarefa t) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    String dataCriacao = t.getDataCriacao().format(formatter);
-                    String dataConclusao = t.getDataConclusao() != null ? 
-                             t.getDataConclusao().format(formatter) : "-";
-
-                    String texto = String.format("<html><b>%s</b> | Criada: %s | Conclusão: %s | Status: %s</html>",
-                            t.getDescricao(), dataCriacao, dataConclusao, t.getStatus());
-                    setText(texto);
-                }
-                return c;
-            }
-        });
+        JList<Tarefa> listaTarefas = getTarefaJList(modeloLista);
 
         JScrollPane scroll = new JScrollPane(listaTarefas);
 
@@ -145,8 +123,7 @@ public class Main {
                 JOptionPane.showMessageDialog(frame, "Só pode completar tarefas do seu usuário.");
                 return;
             }
-            selecionada.setStatus(Tarefa.Status.CONCLUIDA);
-            selecionada.setDataConclusao();
+            gerenciadorTarefa.completarTarefa(selecionada);
             atualizarListaTarefas(modeloLista);
         });
 
@@ -172,6 +149,31 @@ public class Main {
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    private static JList<Tarefa> getTarefaJList(DefaultListModel<Tarefa> modeloLista) {
+        JList<Tarefa> listaTarefas = new JList<>(modeloLista);
+        listaTarefas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listaTarefas.setCellRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                                                          boolean isSelected, boolean cellHasFocus) {
+                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Tarefa t) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    String dataCriacao = t.getDataCriacao().format(formatter);
+                    String dataConclusao = t.getDataConclusao() != null ?
+                             t.getDataConclusao().format(formatter) : "-";
+
+                    String texto = String.format("<html><b>%s</b> | Criada: %s | Conclusão: %s | Status: %s</html>",
+                            t.getDescricao(), dataCriacao, dataConclusao, t.getStatus());
+                    setText(texto);
+                }
+                return c;
+            }
+        });
+        return listaTarefas;
     }
 
     private static void atualizarListaTarefas(DefaultListModel<Tarefa> modeloLista) {

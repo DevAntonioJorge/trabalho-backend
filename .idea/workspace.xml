@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e2157991-0291-4bcc-b569-7c85295d03ef" name="Changes" comment="" />
+    <list default="true" id="e2157991-0291-4bcc-b569-7c85295d03ef" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GerenciadorTarefa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GerenciadorTarefa.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Tarefa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tarefa.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tarefas.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/usuarios.csv" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -40,7 +47,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "correcao",
     "ignore.virus.scanning.warn.message": "true",
     "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "C:/Users/anton/Documents/Codes/www/facul/trabalho-backend",
@@ -49,6 +56,9 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
     "settings.editor.selected.configurable": "ml.llm.LLMConfigurable",
     "vue.rearranger.settings.migration": "true"
   }
@@ -71,6 +81,7 @@
       <workItem from="1748284213474" duration="53000" />
       <workItem from="1748284278669" duration="153000" />
       <workItem from="1749305880417" duration="444000" />
+      <workItem from="1749306348358" duration="2882000" />
     </task>
     <servers />
   </component>

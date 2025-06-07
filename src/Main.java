@@ -11,21 +11,29 @@ public class Main {
         SwingUtilities.invokeLater(Main::mostrarTelaLogin);
     }
 
+    private static boolean validarCamposVazios(String nome, String senha, JFrame frame, String mensagemErro) {
+        if (nome.isEmpty() || senha.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, mensagemErro);
+            return true;
+        }
+        return false;
+    }
+    
+    private static String[] obterCredenciais(JTextField txtUsuario, JPasswordField txtSenha) {
+        String nome = txtUsuario.getText().trim();
+        String senha = new String(txtSenha.getPassword()).trim();
+        return new String[]{nome, senha};
+    }
+
     private static void mostrarTelaLogin() {
         JFrame frame = new JFrame("Login");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(300, 180);
         frame.setLayout(new BorderLayout(10, 10));
 
-        JPanel painelCampos = new JPanel(new GridLayout(4, 1, 5, 5));
-
-        JTextField txtUsuario = new JTextField();
-        JPasswordField txtSenha = new JPasswordField();
-
-        painelCampos.add(new JLabel("Usuário:"));
-        painelCampos.add(txtUsuario);
-        painelCampos.add(new JLabel("Senha:"));
-        painelCampos.add(txtSenha);
+        JPanel painelCampos = criarPainelCampos();
+        JTextField txtUsuario = (JTextField) painelCampos.getComponent(1);
+        JPasswordField txtSenha = (JPasswordField) painelCampos.getComponent(3);
 
         frame.add(painelCampos, BorderLayout.CENTER);
 
@@ -39,11 +47,11 @@ public class Main {
         frame.add(painelBotoes, BorderLayout.SOUTH);
 
         btnLogin.addActionListener(e -> {
-            String nome = txtUsuario.getText().trim();
-            String senha = new String(txtSenha.getPassword()).trim();
+            String[] credenciais = obterCredenciais(txtUsuario, txtSenha);
+            String nome = credenciais[0];
+            String senha = credenciais[1];
 
-            if (nome.isEmpty() || senha.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Preencha usuário e senha.");
+            if (validarCamposVazios(nome, senha, frame, "Preencha usuário e senha.")) {
                 return;
             }
 
@@ -57,11 +65,11 @@ public class Main {
         });
 
         btnCadastrar.addActionListener(e -> {
-            String nome = txtUsuario.getText().trim();
-            String senha = new String(txtSenha.getPassword()).trim();
+            String[] credenciais = obterCredenciais(txtUsuario, txtSenha);
+            String nome = credenciais[0];
+            String senha = credenciais[1];
 
-            if (nome.isEmpty() || senha.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Preencha usuário e senha para cadastrar.");
+            if (validarCamposVazios(nome, senha, frame, "Preencha usuário e senha para cadastrar.")) {
                 return;
             }
 
@@ -75,8 +83,35 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+    
+    private static JPanel criarPainelCampos() {
+        JPanel painelCampos = new JPanel(new GridLayout(4, 1, 5, 5));
+        JTextField txtUsuario = new JTextField();
+        JPasswordField txtSenha = new JPasswordField();
+
+        painelCampos.add(new JLabel("Usuário:"));
+        painelCampos.add(txtUsuario);
+        painelCampos.add(new JLabel("Senha:"));
+        painelCampos.add(txtSenha);
+        
+        return painelCampos;
+    }
+    
+    private static boolean validarTarefaSelecionada(Tarefa tarefa, JFrame frame, String acao) {
+        if (tarefa == null) {
+            JOptionPane.showMessageDialog(frame, "Selecione uma tarefa para " + acao + ".");
+            return true;
+        }
+        if (!tarefa.getUsuario().equals(usuarioLogado)) {
+            JOptionPane.showMessageDialog(frame, "Só pode " + acao + " tarefas do seu usuário.");
+            return true;
+        }
+        return false;
+    }
 
     private static void mostrarTelaPrincipal() {
+        gerenciadorTarefa.recarregarTarefasDoUsuario(usuarioLogado);
+        
         JFrame frame = new JFrame("ToDo List - Usuário: " + usuarioLogado);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 400);
@@ -86,23 +121,35 @@ public class Main {
         JList<Tarefa> listaTarefas = getTarefaJList(modeloLista);
 
         JScrollPane scroll = new JScrollPane(listaTarefas);
-
-        JPanel painelBotoes = new JPanel();
-
-        JButton btnAdicionar = new JButton("Adicionar");
-        JButton btnCompletar = new JButton("Completar");
-        JButton btnRemover = new JButton("Remover");
-        JButton btnLogout = new JButton("Logout");
-
-        painelBotoes.add(btnAdicionar);
-        painelBotoes.add(btnCompletar);
-        painelBotoes.add(btnRemover);
-        painelBotoes.add(btnLogout);
+        JPanel painelBotoes = criarPainelBotoes();
 
         frame.add(scroll, BorderLayout.CENTER);
         frame.add(painelBotoes, BorderLayout.SOUTH);
 
         atualizarListaTarefas(modeloLista);
+        
+        configurarAcoesBotoes(frame, listaTarefas, modeloLista, painelBotoes);
+
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+    
+    private static JPanel criarPainelBotoes() {
+        JPanel painelBotoes = new JPanel();
+        painelBotoes.add(new JButton("Adicionar"));
+        painelBotoes.add(new JButton("Completar"));
+        painelBotoes.add(new JButton("Remover"));
+        painelBotoes.add(new JButton("Logout"));
+        return painelBotoes;
+    }
+    
+    private static void configurarAcoesBotoes(JFrame frame, JList<Tarefa> listaTarefas,
+                                            DefaultListModel<Tarefa> modeloLista, JPanel painelBotoes) {
+        
+        JButton btnAdicionar = (JButton) painelBotoes.getComponent(0);
+        JButton btnCompletar = (JButton) painelBotoes.getComponent(1);
+        JButton btnRemover = (JButton) painelBotoes.getComponent(2);
+        JButton btnLogout = (JButton) painelBotoes.getComponent(3);
 
         btnAdicionar.addActionListener(e -> {
             String descricao = JOptionPane.showInputDialog(frame, "Descrição da tarefa:");
@@ -115,28 +162,17 @@ public class Main {
 
         btnCompletar.addActionListener(e -> {
             Tarefa selecionada = listaTarefas.getSelectedValue();
-            if (selecionada == null) {
-                JOptionPane.showMessageDialog(frame, "Selecione uma tarefa para completar.");
-                return;
-            }
-            if (!selecionada.getUsuario().equals(usuarioLogado)) {
-                JOptionPane.showMessageDialog(frame, "Só pode completar tarefas do seu usuário.");
-                return;
-            }
+            if (validarTarefaSelecionada(selecionada, frame, "completar")) return;
+            
             gerenciadorTarefa.completarTarefa(selecionada);
+            selecionada.setDataConclusao();
             atualizarListaTarefas(modeloLista);
         });
 
         btnRemover.addActionListener(e -> {
             Tarefa selecionada = listaTarefas.getSelectedValue();
-            if (selecionada == null) {
-                JOptionPane.showMessageDialog(frame, "Selecione uma tarefa para remover.");
-                return;
-            }
-            if (!selecionada.getUsuario().equals(usuarioLogado)) {
-                JOptionPane.showMessageDialog(frame, "Só pode remover tarefas do seu usuário.");
-                return;
-            }
+            if (validarTarefaSelecionada(selecionada, frame, "remover")) return;
+            
             gerenciadorTarefa.removerTarefa(selecionada);
             atualizarListaTarefas(modeloLista);
         });
@@ -146,9 +182,6 @@ public class Main {
             frame.dispose();
             mostrarTelaLogin();
         });
-
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
     }
 
     private static JList<Tarefa> getTarefaJList(DefaultListModel<Tarefa> modeloLista) {
@@ -179,9 +212,7 @@ public class Main {
     private static void atualizarListaTarefas(DefaultListModel<Tarefa> modeloLista) {
         modeloLista.clear();
         for (Tarefa t : gerenciadorTarefa.listarTarefas()) {
-            if (t.getUsuario().equals(usuarioLogado)) {
-                modeloLista.addElement(t);
-            }
+            modeloLista.addElement(t);
         }
     }
 }

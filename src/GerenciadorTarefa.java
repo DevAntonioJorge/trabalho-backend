@@ -36,7 +36,7 @@ public class GerenciadorTarefa {
     
     public void completarTarefa(Tarefa tarefa) {
         tarefa.setStatus(Tarefa.Status.CONCLUIDA);
-        tarefa.setDataConclusao(); // Define a data de conclusão
+        tarefa.setDataConclusao(); 
         salvarTarefas();
     }
 
@@ -55,7 +55,6 @@ public class GerenciadorTarefa {
         }
     }
     
-    // Método para fazer parse correto do CSV com campos entre aspas
     private String[] parsearLinhaCSV(String linha) {
         List<String> campos = new ArrayList<>();
         Pattern pattern = Pattern.compile("\"([^\"]*)\"|([^,]+)");
@@ -63,10 +62,8 @@ public class GerenciadorTarefa {
         
         while (matcher.find()) {
             if (matcher.group(1) != null) {
-                // Campo entre aspas
                 campos.add(matcher.group(1));
             } else {
-                // Campo sem aspas
                 campos.add(matcher.group(2));
             }
         }
@@ -86,7 +83,6 @@ public class GerenciadorTarefa {
                 String dataCriacao = partes[4].trim();
                 String dataConclusao = partes[5].trim();
 
-                // Validação do status
                 Tarefa.Status status;
                 try {
                     status = Tarefa.Status.valueOf(statusStr);
@@ -102,13 +98,13 @@ public class GerenciadorTarefa {
                 tarefa.setDataConclusaoAPartirDeString(dataConclusao);
                 
                 return tarefa;
-            } else if (partes.length >= 4) { // Compatibilidade com formato antigo
+            } else if (partes.length >= 4) { 
                 int id = Integer.parseInt(partes[0].trim());
                 String descricao = partes[1].trim();
                 String statusStr = partes[2].trim();
                 String usuario = partes[3].trim();
 
-                // Validação do status
+
                 Tarefa.Status status;
                 try {
                     status = Tarefa.Status.valueOf(statusStr);
@@ -138,7 +134,7 @@ public class GerenciadorTarefa {
         }
         
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
-            String linha = reader.readLine(); // Pula o cabeçalho
+            String linha = reader.readLine();
             if (linha == null) {
                 return todasTarefas;
             }
@@ -200,15 +196,12 @@ public class GerenciadorTarefa {
         salvarTarefasNoArquivo(todasAsTarefas);
     }
     
-    // Método para escapar campos que contêm vírgulas ou aspas
     private String escaparCampoCSV(String campo) {
         if (campo == null) {
             return "";
         }
         
-        // Se o campo contém vírgula, quebra de linha ou aspas, precisa ser envolvido em aspas
         if (campo.contains(",") || campo.contains("\"") || campo.contains("\n") || campo.contains("\r")) {
-            // Escapa aspas duplicando-as e envolve o campo em aspas
             return "\"" + campo.replace("\"", "\"\"") + "\"";
         }
         

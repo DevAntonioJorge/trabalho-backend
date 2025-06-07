@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class GerenciadorTarefa {
     private final List<Tarefa> tarefas = new ArrayList<>();
@@ -53,35 +55,76 @@ public class GerenciadorTarefa {
         }
     }
     
-    // Método atualizado para incluir as datas
-    private Tarefa criarTarefaAPartirDeLinha(String linha) {
-        String[] partes = linha.split(",");
-        if (partes.length >= 6) { // Agora esperamos 6 campos: id, descricao, status, usuario, dataCriacao, dataConclusao
-            int id = Integer.parseInt(partes[0]);
-            String descricao = partes[1].replace("\"", "");
-            Tarefa.Status status = Tarefa.Status.valueOf(partes[2]);
-            String usuario = partes[3].replace("\"", "");
-            String dataCriacao = partes[4].replace("\"", "");
-            String dataConclusao = partes[5].replace("\"", "");
-
-            Tarefa tarefa = new Tarefa(descricao, usuario, status);
-            tarefa.setId(id);
-            
-            // Define as datas a partir das strings do CSV
-            tarefa.setDataCriacaoAPartirDeString(dataCriacao);
-            tarefa.setDataConclusaoAPartirDeString(dataConclusao);
-            
-            return tarefa;
-        } else if (partes.length >= 4) { // Compatibilidade com formato antigo
-            int id = Integer.parseInt(partes[0]);
-            String descricao = partes[1].replace("\"", "");
-            Tarefa.Status status = Tarefa.Status.valueOf(partes[2]);
-            String usuario = partes[3].replace("\"", "");
-
-            Tarefa tarefa = new Tarefa(descricao, usuario, status);
-            tarefa.setId(id);
-            return tarefa;
+    // Método para fazer parse correto do CSV com campos entre aspas
+    private String[] parsearLinhaCSV(String linha) {
+        List<String> campos = new ArrayList<>();
+        Pattern pattern = Pattern.compile("\"([^\"]*)\"|([^,]+)");
+        Matcher matcher = pattern.matcher(linha);
+        
+        while (matcher.find()) {
+            if (matcher.group(1) != null) {
+                // Campo entre aspas
+                campos.add(matcher.group(1));
+            } else {
+                // Campo sem aspas
+                campos.add(matcher.group(2));
+            }
         }
+        
+        return campos.toArray(new String[0]);
+    }
+    
+    private Tarefa criarTarefaAPartirDeLinha(String linha) {
+        try {
+            String[] partes = parsearLinhaCSV(linha);
+            
+            if (partes.length >= 6) { 
+                int id = Integer.parseInt(partes[0].trim());
+                String descricao = partes[1].trim();
+                String statusStr = partes[2].trim();
+                String usuario = partes[3].trim();
+                String dataCriacao = partes[4].trim();
+                String dataConclusao = partes[5].trim();
+
+                // Validação do status
+                Tarefa.Status status;
+                try {
+                    status = Tarefa.Status.valueOf(statusStr);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Status inválido encontrado: '" + statusStr + "'. Usando PENDENTE como padrão.");
+                    status = Tarefa.Status.PENDENTE;
+                }
+
+                Tarefa tarefa = new Tarefa(descricao, usuario, status);
+                tarefa.setId(id);
+                
+                tarefa.setDataCriacaoAPartirDeString(dataCriacao);
+                tarefa.setDataConclusaoAPartirDeString(dataConclusao);
+                
+                return tarefa;
+            } else if (partes.length >= 4) { // Compatibilidade com formato antigo
+                int id = Integer.parseInt(partes[0].trim());
+                String descricao = partes[1].trim();
+                String statusStr = partes[2].trim();
+                String usuario = partes[3].trim();
+
+                // Validação do status
+                Tarefa.Status status;
+                try {
+                    status = Tarefa.Status.valueOf(statusStr);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Status inválido encontrado: '" + statusStr + "'. Usando PENDENTE como padrão.");
+                    status = Tarefa.Status.PENDENTE;
+                }
+
+                Tarefa tarefa = new Tarefa(descricao, usuario, status);
+                tarefa.setId(id);
+                return tarefa;
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao processar linha do CSV: " + linha + " - " + e.getMessage());
+        }
+        
         return null;
     }
     
@@ -101,13 +144,23 @@ public class GerenciadorTarefa {
             }
 
             int maiorId = 0;
+            int numeroLinha = 1;
             while ((linha = reader.readLine()) != null) {
+                numeroLinha++;
+                linha = linha.trim();
+                
+                if (linha.isEmpty()) {
+                    continue;
+                }
+                
                 Tarefa tarefa = criarTarefaAPartirDeLinha(linha);
                 if (tarefa != null) {
                     todasTarefas.add(tarefa);
                     if (tarefa.getId() > maiorId) {
                         maiorId = tarefa.getId();
                     }
+                } else {
+                    System.out.println("Linha " + numeroLinha + " ignorada: formato inválido - " + linha);
                 }
             }
             
@@ -147,21 +200,34 @@ public class GerenciadorTarefa {
         salvarTarefasNoArquivo(todasAsTarefas);
     }
     
-    // Método atualizado para salvar as datas no CSV
+    // Método para escapar campos que contêm vírgulas ou aspas
+    private String escaparCampoCSV(String campo) {
+        if (campo == null) {
+            return "";
+        }
+        
+        // Se o campo contém vírgula, quebra de linha ou aspas, precisa ser envolvido em aspas
+        if (campo.contains(",") || campo.contains("\"") || campo.contains("\n") || campo.contains("\r")) {
+            // Escapa aspas duplicando-as e envolve o campo em aspas
+            return "\"" + campo.replace("\"", "\"\"") + "\"";
+        }
+        
+        return campo;
+    }
+    
     private void salvarTarefasNoArquivo(List<Tarefa> tarefasParaSalvar) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_TAREFAS))) {
-            // Cabeçalho atualizado com as novas colunas
             writer.write("id,descricao,status,usuario,dataCriacao,dataConclusao");
             writer.newLine();
             
             for (Tarefa tarefa : tarefasParaSalvar) {
-                String linha = String.format("%d,\"%s\",%s,\"%s\",\"%s\",\"%s\"",
+                String linha = String.format("%d,%s,%s,%s,%s,%s",
                         tarefa.getId(),
-                        tarefa.getDescricao(),
+                        escaparCampoCSV(tarefa.getDescricao()),
                         tarefa.getStatus(),
-                        tarefa.getUsuario(),
-                        tarefa.getDataCriacaoFormatada(),
-                        tarefa.getDataConclusaoFormatada());
+                        escaparCampoCSV(tarefa.getUsuario()),
+                        escaparCampoCSV(tarefa.getDataCriacaoFormatada()),
+                        escaparCampoCSV(tarefa.getDataConclusaoFormatada()));
                 writer.write(linha);
                 writer.newLine();
             }

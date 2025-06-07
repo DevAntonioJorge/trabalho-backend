@@ -30,10 +30,6 @@ public class GerenciadorUsuario {
         return usuario != null && usuario.getSenha().equals(senha);
     }
 
-    public Usuario buscarUsuarioPorId(int id) {
-        return usuarios.get(id);
-    }
-
     public Usuario buscarUsuarioPorNome(String nome) {
         for (Usuario usuario : usuarios.values()) {
             if (usuario.getNome().equals(nome)) {
@@ -43,19 +39,13 @@ public class GerenciadorUsuario {
         return null;
     }
 
-    public Map<Integer, Usuario> listarUsuarios() {
-        return usuarios;
-    }
-
-    public int getProximoId() {
-        return proximoId;
-    }
-
     private void criarArquivoUsuarios() {
         File arquivo = new File(ARQUIVO_USUARIOS);
         if (!arquivo.exists()) {
             try {
-                arquivo.createNewFile();
+                if (!arquivo.createNewFile()) {
+                    throw new IOException();
+                }
             } catch (IOException e) {
                 System.out.println("Erro ao criar arquivo de usuários: " + e.getMessage());
             }

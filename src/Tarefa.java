@@ -1,4 +1,5 @@
 import java.time.LocalDateTime; 
+import java.time.format.DateTimeFormatter;
 
 public class Tarefa {
 
@@ -7,6 +8,7 @@ public class Tarefa {
     CONCLUIDA
 }
 
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private int id;
     private String descricao;
@@ -34,6 +36,10 @@ public class Tarefa {
     public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
+    
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
 
     public LocalDateTime getDataConclusao() {
         return dataConclusao;  // Pode ser null
@@ -41,6 +47,10 @@ public class Tarefa {
 
     public void setDataConclusao() {
         this.dataConclusao = LocalDateTime.now();
+    }
+    
+    public void setDataConclusao(LocalDateTime dataConclusao) {
+        this.dataConclusao = dataConclusao;
     }
 
     public String getUsuario() {
@@ -58,9 +68,31 @@ public class Tarefa {
     public void setStatus(Status status) {
         this.status = status;
     }
+    
     public void setId(int i) {this.id = i;}
 
     public int getId() {return id;}
+    
+    public String getDataCriacaoFormatada() {
+        return dataCriacao != null ? dataCriacao.format(FORMATTER) : "";
+    }
+    
+    public String getDataConclusaoFormatada() {
+        return dataConclusao != null ? dataConclusao.format(FORMATTER) : "";
+    }
+    
+    public void setDataCriacaoAPartirDeString(String dataStr) {
+        if (dataStr != null && !dataStr.trim().isEmpty()) {
+            this.dataCriacao = LocalDateTime.parse(dataStr, FORMATTER);
+        }
+    }
+    
+    public void setDataConclusaoAPartirDeString(String dataStr) {
+        if (dataStr != null && !dataStr.trim().isEmpty()) {
+            this.dataConclusao = LocalDateTime.parse(dataStr, FORMATTER);
+        }
+    }
+    
     @Override
     public String toString() {
         return descricao;

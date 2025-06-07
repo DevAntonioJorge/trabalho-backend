@@ -53,10 +53,10 @@ public class GerenciadorTarefa {
         }
     }
     
-    // Método atualizado para incluir as datas
+    
     private Tarefa criarTarefaAPartirDeLinha(String linha) {
         String[] partes = linha.split(",");
-        if (partes.length >= 6) { // Agora esperamos 6 campos: id, descricao, status, usuario, dataCriacao, dataConclusao
+        if (partes.length >= 6) { 
             int id = Integer.parseInt(partes[0]);
             String descricao = partes[1].replace("\"", "");
             Tarefa.Status status = Tarefa.Status.valueOf(partes[2]);
@@ -67,12 +67,12 @@ public class GerenciadorTarefa {
             Tarefa tarefa = new Tarefa(descricao, usuario, status);
             tarefa.setId(id);
             
-            // Define as datas a partir das strings do CSV
+            
             tarefa.setDataCriacaoAPartirDeString(dataCriacao);
             tarefa.setDataConclusaoAPartirDeString(dataConclusao);
             
             return tarefa;
-        } else if (partes.length >= 4) { // Compatibilidade com formato antigo
+        } else if (partes.length >= 4) { 
             int id = Integer.parseInt(partes[0]);
             String descricao = partes[1].replace("\"", "");
             Tarefa.Status status = Tarefa.Status.valueOf(partes[2]);
@@ -95,7 +95,7 @@ public class GerenciadorTarefa {
         }
         
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
-            String linha = reader.readLine(); // Pula o cabeçalho
+            String linha = reader.readLine();
             if (linha == null) {
                 return todasTarefas;
             }
@@ -147,10 +147,9 @@ public class GerenciadorTarefa {
         salvarTarefasNoArquivo(todasAsTarefas);
     }
     
-    // Método atualizado para salvar as datas no CSV
+    
     private void salvarTarefasNoArquivo(List<Tarefa> tarefasParaSalvar) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARQUIVO_TAREFAS))) {
-            // Cabeçalho atualizado com as novas colunas
             writer.write("id,descricao,status,usuario,dataCriacao,dataConclusao");
             writer.newLine();
             
